@@ -1,0 +1,156 @@
+/* ASCII Banner plugin styles */
+
+.ascii-banner-container {
+  width: 100%;
+  overflow: hidden;
+  margin: 0 0 1.5rem;
+  border-radius: var(--radius-s);
+}
+
+.ascii-banner-stage {
+  width: 100%;
+  overflow: hidden;
+}
+
+.ascii-banner-container pre,
+.ascii-banner-stage pre {
+  margin: 0;
+  padding: 0.5rem;
+  font-family: var(--font-monospace);
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: pre;
+  font-variant-ligatures: none;
+  overflow: hidden;
+  color: var(--text-normal);
+  background: var(--background-secondary);
+}
+
+.ascii-banner-canvas,
+.ascii-banner-container canvas,
+.ascii-banner-stage canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+.ascii-banner-fallback {
+  white-space: pre;
+}
+
+.ascii-banner-error {
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  border: 1px dashed var(--background-modifier-border);
+  padding: 0.75rem;
+  white-space: pre-wrap;
+}
+
+/* Picker modal */
+
+.ascii-banner-modal {
+  width: min(720px, 92vw);
+}
+
+.ascii-banner-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ascii-banner-picker .ascii-banner-search {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+}
+
+.ascii-banner-picker-layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) 1fr;
+  gap: 0.75rem;
+  min-height: 280px;
+}
+
+.ascii-banner-picker-list {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+}
+
+.ascii-banner-picker-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  border: none;
+  background: transparent;
+  color: var(--text-normal);
+  cursor: pointer;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ascii-banner-picker-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ascii-banner-picker-item[aria-selected="true"] {
+  background: var(--background-modifier-active-hover);
+}
+
+.ascii-banner-picker-item small {
+  color: var(--text-muted);
+}
+
+.ascii-banner-picker-empty {
+  padding: 1rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.ascii-banner-picker-preview {
+  min-width: 0;
+  max-height: 320px;
+  overflow: hidden;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  background: var(--background-secondary);
+}
+
+.ascii-banner-picker-preview .ascii-banner-container {
+  margin: 0;
+}
+
+.ascii-banner-picker-preview pre {
+  font-size: 0.5em;
+}
+
+.ascii-banner-picker-details {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.ascii-banner-picker-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ascii-banner-picker-mode button.is-active {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.ascii-banner-picker-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ascii-banner-container * {
+    animation: none;
+    transition: none;
+  }
+}
