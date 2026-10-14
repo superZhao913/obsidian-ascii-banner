@@ -2,7 +2,7 @@
 
 把开源的 [ascii.rest](https://ascii.rest/) ASCII 动画库用作 Obsidian 笔记顶部的 banner（横幅）。
 
-插件将 `ascii.rest@0.4.0`（MIT，作者 [bas3line](https://github.com/bas3line)）的完整运行时与全部 236 个官方图案打包进插件，因此：
+插件将 `ascii.rest@0.4.0`（MIT，作者 [bas3line](https://github.com/bas3line)）的完整运行时与全部 217 个官方图案打包进插件，因此：
 
 - 笔记中不执行任何远程 `<script>` 或 HTML；
 - 离线也能浏览、选择和渲染已打包的图案；
