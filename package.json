@@ -1,0 +1,22 @@
+{
+  "name": "obsidian-ascii-banner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Use ascii.rest pieces as animated Obsidian note banners.",
+  "scripts": {
+    "build": "node esbuild.config.mjs production",
+    "dev": "node esbuild.config.mjs development",
+    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ascii.rest": "0.4.0",
+    "obsidian": "^1.8.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
