@@ -1,9 +1,11 @@
-import { Notice, Plugin, TFile, requestUrl } from "obsidian";
+import { MarkdownRenderChild, Notice, Plugin, TFile, requestUrl } from "obsidian";
 import { AsciiRuntime } from "./ascii-runtime";
 import { BannerPickerModal } from "./banner-modal";
 import { catalogItemToConfig } from "./banner-modal-helpers";
 import { createBundledCatalog, refreshRemoteCatalog } from "./catalog";
 import { clearBannerConfig, readBannerConfig, writeBannerConfig } from "./frontmatter";
+import { createLivePreviewExtension } from "./live-preview";
+import { createMarkdownPostProcessor } from "./markdown-renderer";
 import type { BannerConfig, PieceCatalogItem } from "./types";
 
 export const REFRESH_EVENT = "ascii-banner:refresh";
@@ -11,10 +13,23 @@ export const REFRESH_EVENT = "ascii-banner:refresh";
 export default class AsciiBannerPlugin extends Plugin {
   private runtime!: AsciiRuntime;
   private catalog!: PieceCatalogItem[];
+  private knownSlugs!: Set<string>;
 
   override async onload(): Promise<void> {
     this.runtime = new AsciiRuntime();
     this.catalog = createBundledCatalog();
+    this.knownSlugs = new Set(this.catalog.map((item) => item.slug));
+
+    this.registerMarkdownPostProcessor(
+      createMarkdownPostProcessor(
+        { getConfig: (path) => this.configForPath(path), runtime: this.runtime },
+        MarkdownRenderChild,
+      ),
+    );
+
+    this.registerEditorExtension(
+      createLivePreviewExtension({ runtime: this.runtime, knownSlugs: this.knownSlugs }),
+    );
 
     this.addCommand({
       id: "set-ascii-banner",
@@ -50,9 +65,15 @@ export default class AsciiBannerPlugin extends Plugin {
     return file;
   }
 
+  private async configForPath(sourcePath: string): Promise<BannerConfig | null> {
+    const file = this.app.vault.getAbstractFileByPath(sourcePath);
+    if (!(file instanceof TFile)) return null;
+    return readBannerConfig(this.app.metadataCache.getFileCache(file) ?? undefined, this.knownSlugs);
+  }
+
   private currentConfig(file: TFile): BannerConfig | null {
     const metadata = this.app.metadataCache.getFileCache(file);
-    return readBannerConfig(metadata ?? undefined, new Set(this.catalog.map((item) => item.slug)));
+    return readBannerConfig(metadata ?? undefined, this.knownSlugs);
   }
 
   private openBannerPicker(): void {
