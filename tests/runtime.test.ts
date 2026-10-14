@@ -109,3 +109,35 @@ test("loader failure falls back to cached frame text without throwing", async ()
   assert.equal(fallback.className, "ascii-banner-fallback");
   assert.doesNotThrow(() => handle.dispose());
 });
+
+test("mounting again on the same container disposes the previous animation", async () => {
+  const calls: string[] = [];
+  const runtime = new AsciiRuntime({
+    loadPiece: async () => piece(),
+    mountPiece: () => () => calls.push("disposed"),
+    createElement: () => new FakeElement() as unknown as HTMLElement,
+  });
+  const container = new FakeElement() as unknown as HTMLElement;
+
+  await runtime.mount(container, config());
+  await runtime.mount(container, config("still"));
+
+  assert.deepEqual(calls, ["disposed"]);
+});
+
+test("shows a readable error hint when loading fails without a cached frame", async () => {
+  const runtime = new AsciiRuntime({
+    loadPiece: async () => { throw new Error("network down"); },
+    mountPiece: () => () => undefined,
+    createElement: () => new FakeElement() as unknown as HTMLElement,
+  });
+  const container = new FakeElement() as unknown as HTMLElement;
+
+  await runtime.mount(container, config());
+  const error = (container as unknown as FakeElement).children[0];
+
+  assert.equal(error.className, "ascii-banner-error");
+  assert.match(error.textContent, /Donut/);
+  assert.match(error.textContent, /network down/);
+  assert.equal(error.getAttribute?.("role") ?? error.attributes.get("role"), "img");
+});
