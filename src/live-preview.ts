@@ -1,11 +1,9 @@
-import { RangeSetBuilder } from "@codemirror/state";
+import { EditorState, RangeSetBuilder, StateField, Transaction } from "@codemirror/state";
 import type { Extension } from "@codemirror/state";
 import {
   Decoration,
   DecorationSet,
   EditorView,
-  ViewPlugin,
-  ViewUpdate,
   WidgetType,
 } from "@codemirror/view";
 import { createBannerContainer, renderBanner } from "./banner-renderer";
@@ -64,20 +62,14 @@ function buildDecorations(text: string, deps: LivePreviewDeps): DecorationSet {
 }
 
 export function createLivePreviewExtension(deps: LivePreviewDeps): Extension {
-  return ViewPlugin.fromClass(
-    class {
-      decorations: DecorationSet;
-
-      constructor(view: EditorView) {
-        this.decorations = buildDecorations(view.state.doc.toString(), deps);
-      }
-
-      update(update: ViewUpdate): void {
-        if (update.docChanged || update.viewportChanged) {
-          this.decorations = buildDecorations(update.state.doc.toString(), deps);
-        }
-      }
+  // Block widgets are only legal in StateField-provided decorations; a
+  // ViewPlugin-provided block decoration throws RangeError and breaks the view.
+  return StateField.define<DecorationSet>({
+    create: (state: EditorState) => buildDecorations(state.doc.toString(), deps),
+    update: (value: DecorationSet, transaction: Transaction) => {
+      if (!transaction.docChanged) return value;
+      return buildDecorations(transaction.state.doc.toString(), deps);
     },
-    { decorations: (value) => value.decorations },
-  );
+    provide: (field) => EditorView.decorations.from(field),
+  });
 }
