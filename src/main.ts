@@ -33,7 +33,7 @@ export default class AsciiBannerPlugin extends Plugin {
 
     this.addCommand({
       id: "set-ascii-banner",
-      name: "设置 ASCII Banner",
+      name: "设置 / 更换 ASCII Banner 图案",
       callback: () => this.openBannerPicker(),
     });
 
@@ -45,7 +45,7 @@ export default class AsciiBannerPlugin extends Plugin {
 
     this.addCommand({
       id: "toggle-ascii-banner-animation",
-      name: "切换 ASCII Banner 动画",
+      name: "切换 ASCII Banner：动画 ⇄ 静止",
       callback: () => this.toggleAnimation(),
     });
 
