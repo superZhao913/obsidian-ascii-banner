@@ -2,43 +2,34 @@
 
 把开源的 [ascii.rest](https://ascii.rest/) ASCII 动画库用作 Obsidian 笔记顶部的 banner（横幅）。
 
-插件将 `ascii.rest@0.4.0`（MIT，作者 [bas3line](https://github.com/bas3line)）的完整运行时与全部 217 个官方图案打包进插件，因此：
+![效果图](https://ascii.rest/og.png)
 
-- 笔记中不执行任何远程 `<script>` 或 HTML；
-- 离线也能浏览、选择和渲染已打包的图案；
-- `kyoto-dusk` 这类彩色动态图案以原生 Canvas 渲染并在 Obsidian 内播放。
+- 内置 ascii.rest 官方全部 **217 个图案**（旋转甜甜圈、京都黄昏、东京雨夜、黑客帝国数字雨……）
+- **动态图案原生播放**，滚出视口自动暂停，可一键切换静止首帧
+- 阅读模式和实时预览（Live Preview）都能看到 banner
+- 配置写进笔记 frontmatter，**换设备同步不丢**；离线也能用
 
-## 安装（从源码构建）
+## 安装（不需要懂代码）
 
-```bash
-git clone <this-repo>
-cd obsidian-ascii-banner
-npm install
-npm run build
-```
+1. 在 [Releases](../../releases/latest) 页面下载三个文件：`main.js`、`manifest.json`、`styles.css`。
+2. 打开你的 Obsidian 库文件夹，进入 `.obsidian/plugins/`（看不到 `.obsidian` 的话，Windows 在资源管理器开启「显示隐藏文件」，macOS 按 `⌘⇧.`）。
+3. 在里面新建一个文件夹，命名为 `ascii-banner`，把刚才下载的三个文件放进去。
+4. 回到 Obsidian：**设置 → 第三方插件**，关闭安全模式（如未关闭），在已安装插件列表里启用 **ASCII Banner**。
 
-构建后把以下文件复制到 `<你的库>/.obsidian/plugins/ascii-banner/`：
-
-- `main.js`
-- `manifest.json`
-- `styles.css`
-
-然后在 Obsidian 的 **设置 → 第三方插件** 中启用 “ASCII Banner”。
-
-开发模式使用 `npm run dev`（esbuild watch）。
+> 也可以用社区插件 [BRAT](https://github.com/TfTHacker/obsidian42-brat) 安装：在 BRAT 里添加本仓库地址即可，之后会自动更新。
 
 ## 使用
 
-打开任意 Markdown 笔记，在命令面板中运行：
+打开任意 Markdown 笔记，按 `⌘P`（Windows 是 `Ctrl+P`）打开命令面板：
 
 | 命令 | 作用 |
 | --- | --- |
-| **设置 / 更换 ASCII Banner 图案** | 打开图案选择器：按名称/分类/描述搜索，右侧实时预览，可选择“动画”或“静止首帧”，点击“应用到当前笔记”写入配置；已有 banner 时用于更换图案 |
-| **清除 ASCII Banner** | 删除当前笔记的 `ascii-banner` frontmatter 字段（其他字段保持不变） |
-| **切换 ASCII Banner：动画 ⇄ 静止** | 把当前笔记已有的图案在“播放动画”和“静止首帧”之间切换（不更换图案） |
-| **刷新 ascii.rest 图案目录** | 从网站刷新图案显示名称；失败时保留内置目录并提示 |
+| **设置 / 更换 ASCII Banner 图案** | 打开图案选择器：按名称/分类/描述搜索，右侧实时预览，可选择「动画」或「静止首帧」，点击「应用到当前笔记」 |
+| **切换 ASCII Banner：动画 ⇄ 静止** | 当前笔记的图案在播放动画和静止首帧之间切换（不更换图案） |
+| **清除 ASCII Banner** | 移除当前笔记的 banner（不影响正文和其他属性） |
+| **刷新 ascii.rest 图案目录** | 从官网刷新图案显示名称；失败时自动使用内置目录 |
 
-Banner 会同时出现在**阅读模式**和**实时预览（Live Preview）**中，位于文档内容之前。
+Banner 会出现在文档内容的最上方，阅读模式和编辑模式都生效。
 
 ## 数据格式
 
