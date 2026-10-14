@@ -85,4 +85,29 @@ export function mergeRemoteCatalog(
   return bundled.map((item) => bySlug.get(item.slug) ?? item);
 }
 
+export interface CatalogResponse {
+  status: number;
+  text: string;
+}
+
+export type CatalogRequest = (url: string) => Promise<CatalogResponse>;
+
+export async function refreshRemoteCatalog(
+  bundled: PieceCatalogItem[],
+  request: CatalogRequest,
+  onError?: (error: unknown) => void,
+): Promise<PieceCatalogItem[]> {
+  try {
+    const response = await request(`${ASCII_REST_ORIGIN}/`);
+    if (response.status < 200 || response.status >= 300) {
+      throw new Error(`ascii.rest returned HTTP ${response.status}`);
+    }
+    const remote = parseRemoteCatalog(response.text, new Set(bundled.map((item) => item.slug)));
+    return mergeRemoteCatalog(bundled, remote);
+  } catch (error) {
+    onError?.(error);
+    return bundled;
+  }
+}
+
 export const ASCII_REST_URL = ASCII_REST_ORIGIN;

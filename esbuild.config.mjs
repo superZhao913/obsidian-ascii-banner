@@ -1,5 +1,5 @@
 import esbuild from "esbuild";
-import { copyFile } from "node:fs/promises";
+import { access } from "node:fs/promises";
 
 const production = process.argv[2] === "production";
 const options = {
@@ -17,7 +17,7 @@ const options = {
 
 if (production) {
   await esbuild.build(options);
-  await copyFile("styles.css", "styles.css");
+  await access("styles.css");
 } else {
   const context = await esbuild.context({ ...options, write: true });
   await context.watch();
